@@ -311,6 +311,14 @@ public class NotificationFragment extends Fragment {
             if (convertView == null) {
                 convertView = View.inflate(context, R.layout.item_notifaction, null);
             }
+
+            LinearLayout title_bar = (LinearLayout)convertView.findViewById(R.id.item_title_bar);
+            ImageView unread_icon = (ImageView)convertView.findViewById(R.id.item_unread_icon);
+
+            if(bean.getRead()==1){
+                title_bar.removeView(unread_icon);
+            }
+
             TextView title = (TextView) convertView.findViewById(R.id.item_title);
             TextView department_name = (TextView)convertView.findViewById(R.id.item_department_name);
             //TextView overview = (TextView) convertView.findViewById(R.id.item_overview);
@@ -331,12 +339,7 @@ public class NotificationFragment extends Fragment {
             department_name.setText(SharedData.GetDepartmentNameById(department));
             time.setText(date);
 
-            LinearLayout title_bar = (LinearLayout)convertView.findViewById(R.id.item_title_bar);
-            ImageView unread_icon = (ImageView)convertView.findViewById(R.id.item_unread_icon);
 
-            if(bean.getRead()==1){
-                title_bar.removeView(unread_icon);
-            }
 
             return convertView;
         }

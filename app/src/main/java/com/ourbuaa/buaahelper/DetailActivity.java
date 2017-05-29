@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -79,6 +80,7 @@ public class DetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 new ReadNotificationTask().execute(id);
                 button_read.setVisibility(View.INVISIBLE);
+                Toast.makeText(DetailActivity.this,"阅读成功",Toast.LENGTH_SHORT).show();
             }
         });
 
