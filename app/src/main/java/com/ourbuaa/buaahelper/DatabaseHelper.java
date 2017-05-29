@@ -1,12 +1,13 @@
 package com.ourbuaa.buaahelper;
 
 import android.content.Context;
-import java.sql.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+
+import java.sql.SQLException;
 
 /**
  * Created by Croxx on 2017/5/25.

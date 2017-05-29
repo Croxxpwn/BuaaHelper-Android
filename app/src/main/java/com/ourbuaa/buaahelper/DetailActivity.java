@@ -1,14 +1,13 @@
 package com.ourbuaa.buaahelper;
 
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
-import org.xml.sax.XMLReader;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -17,15 +16,18 @@ public class DetailActivity extends AppCompatActivity {
     private TextView timeTW;
     private TextView contentTW;
 
-    class ReadNotificationTask extends AsyncTask<Integer,Void,Void>{
+    int id;
+
+    class ReadNotificationTask extends AsyncTask<Integer, Void, Void> {
         @Override
         protected Void doInBackground(Integer... params) {
             int id = params[0];
-            ClientUtils.ReadNotification(SharedData.getU(),id);
+            ClientUtils.ReadNotification(SharedData.getU(), id);
+            DBNotificationDao dao = new DBNotificationDao(DetailActivity.this);
+            dao.ReadNotification(id,SharedData.getU().getUsername());
             return null;
         }
     }
-
 
 
     @Override
@@ -35,15 +37,15 @@ public class DetailActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
-        int id = extras.getInt("id");
+        id = extras.getInt("id");
 
-        DBNotificationDao dao=new DBNotificationDao(DetailActivity.this);
-        DBNotificationBean bean = dao.getNotificationById(id,SharedData.getU().getUsername());
+        DBNotificationDao dao = new DBNotificationDao(DetailActivity.this);
+        DBNotificationBean bean = dao.getNotificationById(id, SharedData.getU().getUsername());
 
-        titleTW = (TextView)findViewById(R.id.detail_title);
-        departmentTW = (TextView)findViewById(R.id.detail_department);
-        timeTW = (TextView)findViewById(R.id.detail_time);
-        contentTW = (TextView)findViewById(R.id.detail_content);
+        titleTW = (TextView) findViewById(R.id.detail_title);
+        departmentTW = (TextView) findViewById(R.id.detail_department);
+        timeTW = (TextView) findViewById(R.id.detail_time);
+        contentTW = (TextView) findViewById(R.id.detail_content);
 
         String title = bean.getTitle();
         int department = bean.getDepartment();
@@ -56,7 +58,33 @@ public class DetailActivity extends AppCompatActivity {
         timeTW.setText(date);
         contentTW.setText(Html.fromHtml(content));
 
-        new ReadNotificationTask().execute(id);
+
+        if (bean.getRead() == 0 && bean.getImportant() == 0) {
+            new ReadNotificationTask().execute(id);
+        }
+
+
+        ImageButton button_back = (ImageButton) findViewById(R.id.button_back);
+        button_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DetailActivity.this.finish();
+            }
+        });
+
+
+        final Button button_read = (Button) findViewById(R.id.detail_button_read);
+        button_read.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ReadNotificationTask().execute(id);
+                button_read.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        if (bean.getImportant() == 0 || bean.getRead() == 1) {
+            button_read.setVisibility(View.INVISIBLE);
+        }
 
     }
 }

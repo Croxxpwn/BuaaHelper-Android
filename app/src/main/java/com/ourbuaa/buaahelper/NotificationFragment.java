@@ -1,16 +1,12 @@
 package com.ourbuaa.buaahelper;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.nfc.tech.NfcB;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.support.v7.widget.AppCompatImageView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +26,6 @@ import com.baoyz.swipemenulistview.SwipeMenuLayout;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.baoyz.swipemenulistview.SwipeMenuView;
 import com.baoyz.widget.PullRefreshLayout;
-import com.j256.ormlite.stmt.query.In;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -116,6 +111,7 @@ public class NotificationFragment extends Fragment {
                     Boolean star = mJSONObject.getBoolean("star");
                     Boolean delete = mJSONObject.getBoolean("delete");
                     String owner = SharedData.getU().getUsername();
+                    int important =mJSONObject.getInt("important");
 
                     localIdList.remove(new Integer(id));
 
@@ -131,6 +127,9 @@ public class NotificationFragment extends Fragment {
                             String content = j.getString("content");
                             String files = j.getString("files");
                             DBNotificationBean bean = new DBNotificationBean(id, SharedData.getU().getUsername(), updated_at, title, author, department, content, files);
+                            if(important==1){
+                                bean.setImportant(1);
+                            }
                             dao.saveNotification(bean);
                         } else {
                             errcodes.add(id);
@@ -332,6 +331,13 @@ public class NotificationFragment extends Fragment {
             department_name.setText(SharedData.GetDepartmentNameById(department));
             time.setText(date);
 
+            LinearLayout title_bar = (LinearLayout)convertView.findViewById(R.id.item_title_bar);
+            ImageView unread_icon = (ImageView)convertView.findViewById(R.id.item_unread_icon);
+
+            if(bean.getRead()==1){
+                title_bar.removeView(unread_icon);
+            }
+
             return convertView;
         }
 
@@ -351,11 +357,7 @@ public class NotificationFragment extends Fragment {
                 DBNotificationBean bean = (DBNotificationBean) getItem(position);
                 bean.setStar(1);
             }
-
-
             int i = 0;
-            //LinearLayout linearLayout = (LinearLayout) view.findViewById(100);
-            //View m = linearLayout.findViewById(0);
 
         }
 

@@ -1,14 +1,10 @@
 package com.ourbuaa.buaahelper;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.LinearLayout;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 

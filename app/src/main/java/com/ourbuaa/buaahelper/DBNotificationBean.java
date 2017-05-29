@@ -8,9 +8,6 @@ package com.ourbuaa.buaahelper;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-
 @DatabaseTable(tableName = "notification")
 public class DBNotificationBean {
     @DatabaseField(id = true, uniqueCombo = true)
@@ -35,10 +32,13 @@ public class DBNotificationBean {
     private int delete;
     @DatabaseField(uniqueCombo = true)
     private String owner;
+    @DatabaseField
+    private int important;
 
     public DBNotificationBean() {
 
     }
+
 
     public DBNotificationBean(int id, String owner, long updated_at, String title, String author, int department, String content, String files) {
         this.id = id;
@@ -49,9 +49,12 @@ public class DBNotificationBean {
         this.content = content;
         this.files = files;
         this.star = 0;
+
         this.read = 0;
         this.delete = 0;
         this.owner = owner;
+
+        this.important = 0;
     }
 
     public int getId() {
@@ -104,5 +107,13 @@ public class DBNotificationBean {
 
     public void setDelete(int delete) {
         this.delete = delete;
+    }
+
+    public int getImportant() {
+        return important;
+    }
+
+    public void setImportant(int important) {
+        this.important = important;
     }
 }

@@ -13,7 +13,20 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="#2296F3"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp">
+
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_withdraw" />
 
     </LinearLayout>
 
@@ -82,12 +95,22 @@
                 android:textSize="22dp" />
 
             <GridLayout
+                android:id="@+id/detail_file_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:id="@+id/detail_file_grid">
+                android:columnCount="2">
 
             </GridLayout>
+
+            <Button
+                android:id="@+id/detail_button_read"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="#2296F3"
+                android:text="我 已 仔 细 阅 读 该 通 知"
+                android:textColor="#FFFFFF"
+                android:textSize="25dp" />
 
         </LinearLayout>
 

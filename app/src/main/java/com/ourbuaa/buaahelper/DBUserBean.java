@@ -4,8 +4,8 @@ package com.ourbuaa.buaahelper;
  * Created by Croxx on 2017/5/25.
  */
 
-import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 
 @DatabaseTable(tableName = "user")
