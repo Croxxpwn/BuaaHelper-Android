@@ -94,9 +94,14 @@ public class NotificationFragment extends Fragment {
 
             JSONObject response = ClientUtils.FetchNotificationList(SharedData.getU());
             try {
+
+
                 JSONArray notificationList = response.getJSONArray("notifications");
 
                 DBNotificationDao idao = new DBNotificationDao(context);
+
+                List<Integer>localIdList = idao.GetNotificationIdList(SharedData.getU().getUsername());
+
                 idao.UnReadAll(SharedData.getU().getUsername());
                 idao.UnStarAll(SharedData.getU().getUsername());
                 idao.UnDeleteAll(SharedData.getU().getUsername());
@@ -111,6 +116,9 @@ public class NotificationFragment extends Fragment {
                     Boolean star = mJSONObject.getBoolean("star");
                     Boolean delete = mJSONObject.getBoolean("delete");
                     String owner = SharedData.getU().getUsername();
+
+                    localIdList.remove(new Integer(id));
+
 
                     if (dao.TestNotificationUpdate(id, updated_at, owner)) {
 
@@ -135,6 +143,12 @@ public class NotificationFragment extends Fragment {
                     if (delete) dao.DeleteNotification(id, SharedData.getU().getUsername());
 
                 }
+
+                for(int i:localIdList){
+                    idao.HardDeleteNotification(i,SharedData.getU().getUsername());
+                }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
                 errcodes = new ArrayList<>();

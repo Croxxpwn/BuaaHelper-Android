@@ -206,4 +206,29 @@ public class DBNotificationDao {
         return beanList;
 
     }
+
+    public List<Integer>GetNotificationIdList(String owner){
+        List<DBNotificationBean> beanList = new ArrayList<>();
+        List<Integer>ids = new ArrayList<>();
+        try {
+            beanList = dao.queryBuilder().where().eq("owner", owner).query();
+            for(DBNotificationBean bean:beanList){
+                ids.add(bean.getId());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ids;
+    }
+
+    public void HardDeleteNotification(int id,String owner){
+        try {
+            DBNotificationBean bean = dao.queryBuilder().where().eq("id", id).and().eq("owner", owner).queryForFirst();
+            dao.delete(bean);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }
