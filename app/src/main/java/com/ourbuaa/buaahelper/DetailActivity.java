@@ -1,5 +1,6 @@
 package com.ourbuaa.buaahelper;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +16,17 @@ public class DetailActivity extends AppCompatActivity {
     private TextView departmentTW;
     private TextView timeTW;
     private TextView contentTW;
+
+    class ReadNotificationTask extends AsyncTask<Integer,Void,Void>{
+        @Override
+        protected Void doInBackground(Integer... params) {
+            int id = params[0];
+            ClientUtils.ReadNotification(SharedData.getU(),id);
+            return null;
+        }
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,5 +55,8 @@ public class DetailActivity extends AppCompatActivity {
         departmentTW.setText(SharedData.GetDepartmentNameById(department));
         timeTW.setText(date);
         contentTW.setText(Html.fromHtml(content));
+
+        new ReadNotificationTask().execute(id);
+
     }
 }
