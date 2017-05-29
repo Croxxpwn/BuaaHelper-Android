@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/left_drawer"
+    android:layout_width="240dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+
+    android:layout_margin="0dp"
+    android:choiceMode="singleChoice"
+    android:divider="@android:color/transparent"
+    android:dividerHeight="0dp"
+    android:padding="0dp"
+    android:orientation="vertical">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:src="@mipmap/background_slidebar"
+            android:adjustViewBounds="true"
+
+            android:scaleType="fitXY"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@mipmap/logo_apphdpi_alpha" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:textSize="25dp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="bottom"
+                    android:id="@+id/info_department"
+                    android:text="软件学院"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:gravity="top"
+                    android:textSize="20dp"
+                    android:textColor="#FFFFFF"
+                    android:id="@+id/info_name"
+                    android:text="名字"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:background="#EEFCFF"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#97B8DB"
+            android:text="所有消息"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/button_notification_all"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#97B8DB"
+            android:text="收藏消息"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:id="@+id/button_notification_star"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#97B8DB"
+            android:text="未读消息"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:id="@+id/button_notification_unRead"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#97B8DB"
+            android:text="已删除"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:id="@+id/button_notification_delete"
+            />
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#2296F3"
+            android:text="退   出   登   录"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+
+            android:layout_marginTop="50dp"
+
+            android:id="@+id/button_logout"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
