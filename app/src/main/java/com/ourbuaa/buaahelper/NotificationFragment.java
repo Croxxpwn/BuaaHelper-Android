@@ -7,6 +7,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
@@ -95,7 +100,7 @@ public class NotificationFragment extends Fragment {
 
                 DBNotificationDao idao = new DBNotificationDao(context);
 
-                List<Integer>localIdList = idao.GetNotificationIdList(SharedData.getU().getUsername());
+                List<Integer> localIdList = idao.GetNotificationIdList(SharedData.getU().getUsername());
 
                 idao.UnReadAll(SharedData.getU().getUsername());
                 idao.UnStarAll(SharedData.getU().getUsername());
@@ -111,7 +116,7 @@ public class NotificationFragment extends Fragment {
                     Boolean star = mJSONObject.getBoolean("star");
                     Boolean delete = mJSONObject.getBoolean("delete");
                     String owner = SharedData.getU().getUsername();
-                    int important =mJSONObject.getInt("important");
+                    int important = mJSONObject.getInt("important");
 
                     localIdList.remove(new Integer(id));
 
@@ -127,7 +132,7 @@ public class NotificationFragment extends Fragment {
                             String content = j.getString("content");
                             String files = j.getString("files");
                             DBNotificationBean bean = new DBNotificationBean(id, SharedData.getU().getUsername(), updated_at, title, author, department, content, files);
-                            if(important==1){
+                            if (important == 1) {
                                 bean.setImportant(1);
                             }
                             dao.saveNotification(bean);
@@ -143,8 +148,8 @@ public class NotificationFragment extends Fragment {
 
                 }
 
-                for(int i:localIdList){
-                    idao.HardDeleteNotification(i,SharedData.getU().getUsername());
+                for (int i : localIdList) {
+                    idao.HardDeleteNotification(i, SharedData.getU().getUsername());
                 }
 
 
@@ -312,15 +317,15 @@ public class NotificationFragment extends Fragment {
                 convertView = View.inflate(context, R.layout.item_notifaction, null);
             }
 
-            LinearLayout title_bar = (LinearLayout)convertView.findViewById(R.id.item_title_bar);
-            ImageView unread_icon = (ImageView)convertView.findViewById(R.id.item_unread_icon);
+            LinearLayout title_bar = (LinearLayout) convertView.findViewById(R.id.item_title_bar);
+            ImageView unread_icon = (ImageView) convertView.findViewById(R.id.item_unread_icon);
 
-            if(bean.getRead()==1){
+            if (bean.getRead() == 1) {
                 title_bar.removeView(unread_icon);
             }
 
             TextView title = (TextView) convertView.findViewById(R.id.item_title);
-            TextView department_name = (TextView)convertView.findViewById(R.id.item_department_name);
+            TextView department_name = (TextView) convertView.findViewById(R.id.item_department_name);
             //TextView overview = (TextView) convertView.findViewById(R.id.item_overview);
             TextView time = (TextView) convertView.findViewById(R.id.item_time);
 
@@ -338,7 +343,6 @@ public class NotificationFragment extends Fragment {
             int department = bean.getDepartment();
             department_name.setText(SharedData.GetDepartmentNameById(department));
             time.setText(date);
-
 
 
             return convertView;
@@ -365,6 +369,7 @@ public class NotificationFragment extends Fragment {
         }
 
     }
+
 
     public void freshNotificationList() {
         DBNotificationDao dao = new DBNotificationDao(context);
@@ -627,6 +632,47 @@ public class NotificationFragment extends Fragment {
         //listView.setSwipeDirection(SwipeMenuListView.DIRECTION_RIGHT);
         listView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
         listView.setAdapter(mAdapter);
+
+        final FloatingSearchView mFloatingSearchView = (FloatingSearchView) view.findViewById(R.id.list_search_view);
+        mFloatingSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
+            @Override
+            public void onSearchTextChanged(String oldQuery, String newQuery) {
+                List<NotificationSuggestion> results = new ArrayList<NotificationSuggestion>();
+
+                if (!newQuery.equalsIgnoreCase("")) {
+
+                    Log.d("Search","Searching...");
+
+                    DBNotificationDao dao = new DBNotificationDao(context);
+                    List<DBNotificationBean> beanList = dao.FindNotificationsByKeyWordInTitle(newQuery,SharedData.getU().getUsername());
+                    results.clear();
+                    Log.d("Search",""+beanList.size());
+                    for(DBNotificationBean bean:beanList){
+                        results.add(new NotificationSuggestion(bean));
+                    }
+                }
+                mFloatingSearchView.swapSuggestions(results);
+            }
+
+        });
+
+        mFloatingSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
+            @Override
+            public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
+
+                Intent intent = new Intent();
+                intent.setClass(context, DetailActivity.class);
+                int notification_id = ((NotificationSuggestion)searchSuggestion).GetNotificationBean().getId();
+                intent.putExtra("id", notification_id);
+                context.startActivity(intent);
+                //Log.d("Search",searchSuggestion.getBody());
+            }
+
+            @Override
+            public void onSearchAction(String currentQuery) {
+                
+            }
+        });
 
 
         return view;

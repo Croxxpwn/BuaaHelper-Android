@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BuaaHelper.iml" filepath="$PROJECT_DIR$/BuaaHelper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FloatingSearchView-library/FloatingSearchView-library.iml" filepath="$PROJECT_DIR$/FloatingSearchView-library/FloatingSearchView-library.iml" />
       <module fileurl="file://$PROJECT_DIR$/PullRefreshLayout-library/PullRefreshLayout-library.iml" filepath="$PROJECT_DIR$/PullRefreshLayout-library/PullRefreshLayout-library.iml" />
       <module fileurl="file://$PROJECT_DIR$/SwipeMenuListView-library/SwipeMenuListView-library.iml" filepath="$PROJECT_DIR$/SwipeMenuListView-library/SwipeMenuListView-library.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />

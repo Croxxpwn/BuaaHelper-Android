@@ -1,0 +1,58 @@
+Index: app/src/main/java/com/ourbuaa/buaahelper/NotificationFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/ourbuaa/buaahelper/NotificationFragment.java	(revision 6a68ac2a429660a6564a9e97ea44c7705228ad17)
++++ app/src/main/java/com/ourbuaa/buaahelper/NotificationFragment.java	(revision )
+@@ -311,6 +311,14 @@
+             if (convertView == null) {
+                 convertView = View.inflate(context, R.layout.item_notifaction, null);
+             }
++
++            LinearLayout title_bar = (LinearLayout)convertView.findViewById(R.id.item_title_bar);
++            ImageView unread_icon = (ImageView)convertView.findViewById(R.id.item_unread_icon);
++
++            if(bean.getRead()==1){
++                title_bar.removeView(unread_icon);
++            }
++
+             TextView title = (TextView) convertView.findViewById(R.id.item_title);
+             TextView department_name = (TextView)convertView.findViewById(R.id.item_department_name);
+             //TextView overview = (TextView) convertView.findViewById(R.id.item_overview);
+@@ -331,12 +339,7 @@
+             department_name.setText(SharedData.GetDepartmentNameById(department));
+             time.setText(date);
+ 
+-            LinearLayout title_bar = (LinearLayout)convertView.findViewById(R.id.item_title_bar);
+-            ImageView unread_icon = (ImageView)convertView.findViewById(R.id.item_unread_icon);
+ 
+-            if(bean.getRead()==1){
+-                title_bar.removeView(unread_icon);
+-            }
+ 
+             return convertView;
+         }
+Index: app/src/main/java/com/ourbuaa/buaahelper/DetailActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/ourbuaa/buaahelper/DetailActivity.java	(revision 6a68ac2a429660a6564a9e97ea44c7705228ad17)
++++ app/src/main/java/com/ourbuaa/buaahelper/DetailActivity.java	(revision )
+@@ -8,6 +8,7 @@
+ import android.widget.Button;
+ import android.widget.ImageButton;
+ import android.widget.TextView;
++import android.widget.Toast;
+ 
+ public class DetailActivity extends AppCompatActivity {
+ 
+@@ -79,6 +80,7 @@
+             public void onClick(View v) {
+                 new ReadNotificationTask().execute(id);
+                 button_read.setVisibility(View.INVISIBLE);
++                Toast.makeText(DetailActivity.this,"阅读成功",Toast.LENGTH_SHORT).show();
+             }
+         });
+ 

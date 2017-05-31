@@ -8,6 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/FloatingSearchView-library" />
             <option value="$PROJECT_DIR$/PullRefreshLayout-library" />
             <option value="$PROJECT_DIR$/SwipeMenuListView-library" />
             <option value="$PROJECT_DIR$/app" />

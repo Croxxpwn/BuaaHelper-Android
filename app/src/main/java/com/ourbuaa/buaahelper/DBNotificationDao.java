@@ -153,7 +153,7 @@ public class DBNotificationDao {
             //int count = dao.queryForAll().size();
             Long offset = new Long((long) offset_int);
             Long limit = new Long((long) PAGE_COLUMNS);
-            beanList = dao.queryBuilder().orderBy("updated_at", false).offset(offset).limit(limit).where().eq("owner", owner).and().eq("delete",0).query();
+            beanList = dao.queryBuilder().orderBy("updated_at", false).offset(offset).limit(limit).where().eq("owner", owner).and().eq("delete", 0).query();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -167,7 +167,7 @@ public class DBNotificationDao {
             //int count = dao.queryForAll().size();
             Long offset = new Long((long) offset_int);
             Long limit = new Long((long) PAGE_COLUMNS);
-            beanList = dao.queryBuilder().orderBy("updated_at", false).offset(offset).limit(limit).where().eq("owner", owner).and().eq("star", 1).and().eq("delete",0).query();
+            beanList = dao.queryBuilder().orderBy("updated_at", false).offset(offset).limit(limit).where().eq("owner", owner).and().eq("star", 1).and().eq("delete", 0).query();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -181,7 +181,7 @@ public class DBNotificationDao {
             //int count = dao.queryForAll().size();
             Long offset = new Long((long) offset_int);
             Long limit = new Long((long) PAGE_COLUMNS);
-            beanList = dao.queryBuilder().orderBy("updated_at", false).offset(offset).limit(limit).where().eq("owner", owner).and().eq("read", 0).and().eq("delete",0).query();
+            beanList = dao.queryBuilder().orderBy("updated_at", false).offset(offset).limit(limit).where().eq("owner", owner).and().eq("read", 0).and().eq("delete", 0).query();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -195,7 +195,7 @@ public class DBNotificationDao {
             //int count = dao.queryForAll().size();
             Long offset = new Long((long) offset_int);
             Long limit = new Long((long) PAGE_COLUMNS);
-            beanList = dao.queryBuilder().orderBy("updated_at", false).offset(offset).limit(limit).where().eq("owner", owner).and().eq("delete",1).query();
+            beanList = dao.queryBuilder().orderBy("updated_at", false).offset(offset).limit(limit).where().eq("owner", owner).and().eq("delete", 1).query();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -203,12 +203,12 @@ public class DBNotificationDao {
 
     }
 
-    public List<Integer>GetNotificationIdList(String owner){
+    public List<Integer> GetNotificationIdList(String owner) {
         List<DBNotificationBean> beanList = new ArrayList<>();
-        List<Integer>ids = new ArrayList<>();
+        List<Integer> ids = new ArrayList<>();
         try {
             beanList = dao.queryBuilder().where().eq("owner", owner).query();
-            for(DBNotificationBean bean:beanList){
+            for (DBNotificationBean bean : beanList) {
                 ids.add(bean.getId());
             }
 
@@ -218,13 +218,22 @@ public class DBNotificationDao {
         return ids;
     }
 
-    public void HardDeleteNotification(int id,String owner){
+    public void HardDeleteNotification(int id, String owner) {
         try {
             DBNotificationBean bean = dao.queryBuilder().where().eq("id", id).and().eq("owner", owner).queryForFirst();
             dao.delete(bean);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public List<DBNotificationBean> FindNotificationsByKeyWordInTitle(String keyword, String owner) {
+        List<DBNotificationBean> beanList = new ArrayList<>();
+        try {
+            beanList = dao.queryBuilder().orderBy("updated_at", false).where().eq("owner", owner).and().eq("delete", 0).and().like("title", "%" + keyword + "%").query();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return beanList;
     }
 }

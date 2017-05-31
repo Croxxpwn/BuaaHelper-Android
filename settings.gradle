@@ -1,1 +1,1 @@
-include ':app', ':SwipeMenuListView-library', ':PullRefreshLayout-library'
+include ':app', ':SwipeMenuListView-library', ':PullRefreshLayout-library', ':FloatingSearchView-library'
