@@ -1,29 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#2296F3"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="10dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
-    android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:layout_marginBottom="5dp">
 
     <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:layout_margin="5dp"
         android:adjustViewBounds="true"
+        android:background="#2296F3"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_star" />
+        android:src="@drawable/ic_file" />
 
-    <TextView
-        android:id="@+id/downlist_item_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="1"
-        android:text="下载项" />
+        android:background="#FFFFFF"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:padding="10dp">
 
+
+        <TextView
+            android:id="@+id/downlist_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+
+            android:text="下载项.croxx.我只是想看一看这个名字有多长啦啦啦啦啦啦啦啦啦啦啦啦啦"
+            android:textColor="#000000"
+            android:textSize="15dp" />
+
+
+    </LinearLayout>
 </LinearLayout>

@@ -6,8 +6,8 @@
     android:orientation="vertical">
 
 
-    <!--
 
+<!--
     <include layout="@layout/download_filelist_item" />
 
     <include layout="@layout/download_filelist_item" />
@@ -32,6 +32,6 @@
 
     <include layout="@layout/download_filelist_item" />
 
-    -->
+-->
 
 </LinearLayout>

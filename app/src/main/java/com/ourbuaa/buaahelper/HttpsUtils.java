@@ -119,7 +119,7 @@ public class HttpsUtils {
      * @param savePath
      * @throws IOException
      */
-    public static void downLoadFromUrl(String urlStr, String fileName, String savePath) throws IOException {
+    public static int downLoadFromUrl(String urlStr, String fileName, String savePath) throws IOException {
         URL url = new URL(urlStr);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         //设置超时间为3秒
@@ -138,6 +138,7 @@ public class HttpsUtils {
             saveDir.mkdirs();
         }
         File file = new File(saveDir + File.separator + fileName);
+        if(file.exists())return 2;
         FileOutputStream fos = new FileOutputStream(file);
         fos.write(getData);
         if (fos != null) {
@@ -147,6 +148,7 @@ public class HttpsUtils {
             inputStream.close();
         }
         System.out.println("info:" + url + " download success");
+        return 1;
     }
 
     /**

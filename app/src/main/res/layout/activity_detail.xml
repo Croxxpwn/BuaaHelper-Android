@@ -11,19 +11,20 @@
     <LinearLayout
         android:id="@+id/detail_button_bar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="25dp"
         android:background="#2296F3"
         android:orientation="horizontal"
-        android:paddingBottom="5dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp">
+        android:paddingRight="10dp">
 
         <ImageButton
             android:id="@+id/button_back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:adjustViewBounds="true"
+
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:src="@drawable/ic_withdraw" />
@@ -54,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:text="标题"
                     android:textColor="#FFFFFF"
-                    android:textSize="22dp" />
+                    android:textSize="18dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -69,7 +70,7 @@
                         android:layout_weight="1"
                         android:text="部门"
                         android:textColor="#FFFFFF"
-                        android:textSize="18dp" />
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/detail_time"
@@ -78,7 +79,7 @@
                         android:layout_weight="1"
                         android:text="时间"
                         android:textColor="#FFFFFF"
-                        android:textSize="18dp" />
+                        android:textSize="14dp" />
 
                 </LinearLayout>
 
@@ -92,20 +93,21 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:text="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
-                android:textColor="#000"
-                android:textSize="22dp" />
-
-            <include layout="@layout/download_filelist_layout"/>
+                 />
 
             <Button
                 android:id="@+id/detail_button_read"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_margin="10dp"
                 android:background="#2296F3"
-                android:text="我 已 仔 细 阅 读 该 通 知"
+                android:text="我  已  仔  细  阅  读  该  通  知"
                 android:textColor="#FFFFFF"
-                android:textSize="25dp" />
+                android:textSize="18dp" />
+
+            <include layout="@layout/download_filelist_layout"/>
+
+
 
         </LinearLayout>
 
