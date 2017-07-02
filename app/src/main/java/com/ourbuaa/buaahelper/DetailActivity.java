@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.j256.ormlite.stmt.query.In;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -34,6 +36,122 @@ public class DetailActivity extends AppCompatActivity {
 
 
     int id;
+
+    class ShowNotificationTask extends AsyncTask<Integer, Void, Void> {
+        @Override
+        protected Void doInBackground(Integer... params) {
+            int id = params[0];
+            try {
+                DBNotificationDao dao = new DBNotificationDao(DetailActivity.this);
+                DBNotificationBean bean = dao.getNotificationById(id, SharedData.getU().getUsername());
+                if (bean.getFull() < 3) {
+
+                    JSONObject full3 = ClientUtils.FetchNotificationFull(SharedData.getU(), id);
+                    full3 = full3.getJSONObject("notification");
+                    String content = full3.getString("content");
+                    String files = full3.getString("files");
+                    dao.Full3NotificationById(id, SharedData.getU().getUsername(), content, files);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            DBNotificationDao dao = new DBNotificationDao(DetailActivity.this);
+            DBNotificationBean bean = dao.getNotificationById(id, SharedData.getU().getUsername());
+
+            titleTW = (TextView) findViewById(R.id.detail_title);
+            departmentTW = (TextView) findViewById(R.id.detail_department);
+            timeTW = (TextView) findViewById(R.id.detail_time);
+            contentTW = (TextView) findViewById(R.id.detail_content);
+
+            String title = bean.getTitle();
+            int department = bean.getDepartment();
+            long time = bean.getUpdated_at();
+            String content = bean.getContent();
+            String date = SharedData.Long2Date(time);
+            String department_name = bean.getDepartment_name();
+
+            titleTW.setText(title);
+            departmentTW.setText(department_name);
+            timeTW.setText(date);
+            contentTW.setText(Html.fromHtml(content));
+
+
+            if (bean.getRead() == 0 && bean.getImportant() == 0) {
+                new ReadNotificationTask().execute(id);
+            }
+
+
+            ImageButton button_back = (ImageButton) findViewById(R.id.button_back);
+            button_back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DetailActivity.this.finish();
+                }
+            });
+
+
+            final Button button_read = (Button) findViewById(R.id.detail_button_read);
+            button_read.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new ReadNotificationTask().execute(id);
+                    button_read.setVisibility(View.INVISIBLE);
+                    Toast.makeText(DetailActivity.this, "阅读成功", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            if (bean.getImportant() == 0 || bean.getRead() == 1) {
+                button_read.setVisibility(View.INVISIBLE);
+            }
+
+            LinearLayout downlist_layout = (LinearLayout) findViewById(R.id.downlist_layout);
+
+            try {
+                JSONArray fileJSONArray = new JSONArray(bean.getFiles());
+                for (int i = 0; i < fileJSONArray.length(); i++) {
+                    JSONObject mJSONObject = fileJSONArray.getJSONObject(i);
+                    final String name = mJSONObject.getString("fileName");
+                    final String url = mJSONObject.getString("url");
+                    LinearLayout itemView = (LinearLayout) getLayoutInflater().inflate(R.layout.download_filelist_item, downlist_layout, false);
+                    TextView nameView = (TextView) itemView.findViewById(R.id.downlist_item_name);
+                    nameView.setText(name);
+                    itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/BuaaHelper/" + name);
+                            if (file.exists()) {
+                                Toast.makeText(DetailActivity.this, "文件已存在！", Toast.LENGTH_SHORT).show();
+                                //openFile(file);
+                            } else {
+                                if (ContextCompat.checkSelfPermission(DetailActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                                    ActivityCompat.requestPermissions(DetailActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                                } else {
+                                    new DownloadFileTask().execute(url, name);
+                                    Toast.makeText(DetailActivity.this, "正在开始下载...", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            //ActivityCompat.requestPermissions(DetailActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                            //new DownloadFileTask().execute("https://www.ourbuaa.com/file/download/5ecdefde0ed0432c27be8519a9a3ef954662f96a", "file");
+                        }
+                    });
+                    downlist_layout.addView(itemView);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
 
     class ReadNotificationTask extends AsyncTask<Integer, Void, Void> {
         @Override
@@ -94,6 +212,10 @@ public class DetailActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
         id = extras.getInt("id");
+
+        new ShowNotificationTask().execute(id);
+
+        /*
 
         DBNotificationDao dao = new DBNotificationDao(DetailActivity.this);
         DBNotificationBean bean = dao.getNotificationById(id, SharedData.getU().getUsername());
@@ -180,6 +302,8 @@ public class DetailActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        */
     }
 
     /**

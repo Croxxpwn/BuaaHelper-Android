@@ -1,9 +1,16 @@
 package com.ourbuaa.buaahelper;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,8 +33,8 @@ public class LoginActivity extends AppCompatActivity {
             String username = params[0];
             String password = params[1];
 
-            return ClientUtils.Login(username,password);
-
+            //return ClientUtils.Login(username,password);
+            return ClientUtils.JWTLogin(username,password);
         }
 
         @Override
@@ -40,7 +47,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     DBUserDao userDao = new DBUserDao(LoginActivity.this);
 
-                    String access_token = mJSONObject.getString("access_token");
+                    //String access_token = mJSONObject.getString("access_token");
+                    String access_token = mJSONObject.getString("token");
 
                     DBUserBean u = new DBUserBean(mJSONObject.getString("username"), access_token);
 /*
@@ -112,7 +120,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-
 
     }
 

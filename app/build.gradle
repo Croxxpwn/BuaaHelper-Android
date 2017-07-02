@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.ourbuaa.buaahelper"
         minSdkVersion 15
@@ -28,10 +28,10 @@ dependencies {
     compile files('src/main/lib/ormlite-android-5.0.jar')
     compile files('src/main/lib/ormlite-core-5.0.jar')
     compile project(':PullRefreshLayout-library')
+    compile project(':FloatingSearchView-library')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'
-    compile project(':FloatingSearchView-library')
 }

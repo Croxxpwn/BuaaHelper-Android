@@ -1,14 +1,24 @@
 package com.ourbuaa.buaahelper;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -35,6 +45,8 @@ import com.baoyz.widget.PullRefreshLayout;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -94,10 +106,100 @@ public class NotificationFragment extends Fragment {
 
             JSONObject response = ClientUtils.FetchNotificationList(SharedData.getU());
             try {
-
-
+                DBNotificationDao idao = new DBNotificationDao(context);
                 JSONArray notificationList = response.getJSONArray("notifications");
+                for (int i = 0; i < notificationList.length(); i++) {
+                    JSONObject mJSONObject = notificationList.getJSONObject(i);
+                    int id = mJSONObject.getInt("id");
+                    long version = mJSONObject.getLong("version");
+                    DBNotificationBean bean = idao.getNotificationById(id, SharedData.getU().getUsername());
 
+
+                    if (bean == null) {
+
+                        /** 如果不存在 */
+
+                        idao.Full1Notification(id, SharedData.getU().getUsername(), version);
+                        JSONObject full2 = ClientUtils.FetchNotificationInfo(SharedData.getU(), id);
+                        full2 = full2.getJSONObject("notification");
+                        String title = full2.getString("title");
+                        String author = full2.getString("author");
+                        int department = full2.getInt("department");
+                        String department_name = full2.getString("department_name");
+                        String department_avatar = full2.getString("department_avatar");
+
+                        String imgurl_splits[] = department_avatar.split("\\/");
+                        String imgurl_hash = imgurl_splits[imgurl_splits.length - 1];
+
+                        File avatar = new File(context.getCacheDir().getAbsolutePath() + "/" + imgurl_hash);
+                        if (!avatar.exists()) {
+                            HttpsUtils.downLoadFromUrl(department_avatar, imgurl_hash, context.getCacheDir().getAbsolutePath() + "/");
+                        }
+
+                        long start_time = full2.getLong("start_date");
+                        long finish_time = full2.getLong("finish_date");
+                        String excerpt = full2.getString("excerpt");
+                        Boolean important_b = full2.getBoolean("important");
+                        Boolean read_b = full2.getBoolean("read");
+                        Boolean star_b = full2.getBoolean("star");
+                        Boolean delete_b = full2.getBoolean("delete");
+                        long updated_at = full2.getLong("updated_at");
+                        idao.Full2NotificationById(id, SharedData.getU().getUsername(), title, author,
+                                department, department_name, department_avatar, start_time, finish_time, excerpt,
+                                important_b ? 1 : 0, read_b ? 1 : 0, star_b ? 1 : 0, delete_b ? 1 : 0, version, updated_at);
+
+                    } else {
+
+                        /** 如果通知存在 */
+
+                        if (bean.getVersion() < version) {
+
+                            /** 如果通知状态过期 */
+
+                            JSONObject full2 = ClientUtils.FetchNotificationInfo(SharedData.getU(), id);
+                            full2 = full2.getJSONObject("notification");
+                            String title = full2.getString("title");
+                            String author = full2.getString("author");
+                            int department = full2.getInt("department");
+                            String department_name = full2.getString("department_name");
+                            String department_avatar = full2.getString("department_avatar");
+
+                            String imgurl_splits[] = department_avatar.split("\\/");
+                            String imgurl_hash = imgurl_splits[imgurl_splits.length - 1];
+
+                            File avatar = new File(context.getCacheDir().getAbsolutePath() + "/" + imgurl_hash);
+                            if (!avatar.exists()) {
+                                HttpsUtils.downLoadFromUrl(department_avatar, imgurl_hash, context.getCacheDir().getAbsolutePath() + "/");
+                            }
+
+                            long start_time = full2.getLong("start_date");
+                            long finish_time = full2.getLong("finish_date");
+                            String excerpt = full2.getString("excerpt");
+                            Boolean important_b = full2.getBoolean("important");
+                            Boolean read_b = full2.getBoolean("read");
+                            Boolean star_b = full2.getBoolean("star");
+                            Boolean delete_b = full2.getBoolean("delete");
+                            long updated_at = full2.getLong("updated_at");
+                            if (bean.getUpdated_at() < updated_at) {
+
+                                /** 如果通知内容过期 */
+
+                                JSONObject full3 = ClientUtils.FetchNotificationFull(SharedData.getU(), id);
+                                full3 = full3.getJSONObject("notification");
+                                String content = full3.getString("content");
+                                String files = full3.getString("files");
+                                idao.Full3NotificationById(id, SharedData.getU().getUsername(), content, files);
+                            }
+                            idao.Full2NotificationById(id, SharedData.getU().getUsername(), title, author,
+                                    department, department_name, department_avatar, start_time, finish_time, excerpt,
+                                    important_b ? 1 : 0, read_b ? 1 : 0, star_b ? 1 : 0, delete_b ? 1 : 0, version, updated_at);
+
+                        }
+
+                    }
+                }
+
+/*
                 DBNotificationDao idao = new DBNotificationDao(context);
 
                 List<Integer> localIdList = idao.GetNotificationIdList(SharedData.getU().getUsername());
@@ -151,7 +253,7 @@ public class NotificationFragment extends Fragment {
                 for (int i : localIdList) {
                     idao.HardDeleteNotification(i, SharedData.getU().getUsername());
                 }
-
+*/
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -332,8 +434,17 @@ public class NotificationFragment extends Fragment {
             ImageView img = (ImageView) convertView.findViewById(R.id.item_img);
             //String imgname = "d" + bean.getDepartment();
             int resId = getResources().getIdentifier("d" + bean.getDepartment(), "mipmap", context.getPackageName());
-            img.setImageResource(resId);
 
+            String imgurl_splits[] = bean.getDepartment_avatar().split("\\/");
+            String imgurl_hash = imgurl_splits[imgurl_splits.length - 1];
+
+            try {
+                FileInputStream fis = new FileInputStream(context.getCacheDir().getAbsolutePath() + "/" + imgurl_hash);
+                Bitmap bitmap = BitmapFactory.decodeStream(fis);
+                img.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             //String content = removeHTMLTag(bean.getContent());
 
             title.setText(bean.getTitle());
@@ -341,7 +452,7 @@ public class NotificationFragment extends Fragment {
 
             String date = SharedData.Long2Date(bean.getUpdated_at());
             int department = bean.getDepartment();
-            department_name.setText(SharedData.GetDepartmentNameById(department));
+            department_name.setText(bean.getDepartment_name());
             time.setText(date);
 
 
@@ -398,6 +509,8 @@ public class NotificationFragment extends Fragment {
     }
 
     Context context;
+
+    FloatingSearchView mFloatingSearchView;
 
     SwipeMenuListView listView;
     NotificationAdapter mAdapter;
@@ -633,7 +746,7 @@ public class NotificationFragment extends Fragment {
         listView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
         listView.setAdapter(mAdapter);
 
-        final FloatingSearchView mFloatingSearchView = (FloatingSearchView) view.findViewById(R.id.list_search_view);
+        mFloatingSearchView = (FloatingSearchView) view.findViewById(R.id.list_search_view);
         mFloatingSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
             @Override
             public void onSearchTextChanged(String oldQuery, String newQuery) {
@@ -641,13 +754,13 @@ public class NotificationFragment extends Fragment {
 
                 if (!newQuery.equalsIgnoreCase("")) {
 
-                    Log.d("Search","Searching...");
+                    Log.d("Search", "Searching...");
 
                     DBNotificationDao dao = new DBNotificationDao(context);
-                    List<DBNotificationBean> beanList = dao.FindNotificationsByKeyWordInTitle(newQuery,SharedData.getU().getUsername());
+                    List<DBNotificationBean> beanList = dao.FindNotificationsByKeyWordInTitle(newQuery, SharedData.getU().getUsername());
                     results.clear();
-                    Log.d("Search",""+beanList.size());
-                    for(DBNotificationBean bean:beanList){
+                    Log.d("Search", "" + beanList.size());
+                    for (DBNotificationBean bean : beanList) {
                         results.add(new NotificationSuggestion(bean));
                     }
                 }
@@ -662,7 +775,7 @@ public class NotificationFragment extends Fragment {
 
                 Intent intent = new Intent();
                 intent.setClass(context, DetailActivity.class);
-                int notification_id = ((NotificationSuggestion)searchSuggestion).GetNotificationBean().getId();
+                int notification_id = ((NotificationSuggestion) searchSuggestion).GetNotificationBean().getId();
                 intent.putExtra("id", notification_id);
                 context.startActivity(intent);
                 //Log.d("Search",searchSuggestion.getBody());
@@ -670,12 +783,16 @@ public class NotificationFragment extends Fragment {
 
             @Override
             public void onSearchAction(String currentQuery) {
-                
+
             }
         });
 
 
         return view;
+    }
+
+    public void AttachDrawerToSearchHamburger(DrawerLayout drawer) {
+        mFloatingSearchView.attachNavigationDrawerToMenuButton(drawer);
     }
 
     @Override

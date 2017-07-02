@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        drawer_main = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         fragmentManager = getFragmentManager();
         notificationFragment = (NotificationFragment) fragmentManager.findFragmentById(R.id.fragment_notification);
@@ -82,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
         textView_name = (TextView) findViewById(R.id.info_name);
         textView_department_name = (TextView) findViewById(R.id.info_department);
 
-        drawer_main = (DrawerLayout) findViewById(R.id.drawer_layout);
+        notificationFragment.AttachDrawerToSearchHamburger(drawer_main);
+
+
 
         //drawer_main = (DrawerLayout)getLayoutInflater().inflate(R.id.drawer_layout,)
 
@@ -170,5 +173,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onResume();
+    }
+
+    public DrawerLayout getDrawer(){
+        return drawer_main;
     }
 }

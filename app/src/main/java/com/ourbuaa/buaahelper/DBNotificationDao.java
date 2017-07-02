@@ -236,4 +236,57 @@ public class DBNotificationDao {
         }
         return beanList;
     }
+
+    public void Full1Notification(int id, String owner, long version) {
+        try {
+            DBNotificationBean bean = new DBNotificationBean(id, version, owner);
+            dao.create(bean);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void Full2NotificationById(int id, String owner, String title, String author,
+                                      int department, String department_name, String department_avatar,
+                                      long start_time, long finish_time, String excerpt,
+                                      int important, int read, int star, int delete, long version, long updated_at) {
+        try {
+            DBNotificationBean bean = dao.queryBuilder().where().eq("id", id).and().eq("owner", owner).queryForFirst();
+            bean.setTitle(title);
+            bean.setAuthor(author);
+            bean.setDepartment(department);
+            bean.setDepartment_name(department_name);
+            bean.setDepartment_avatar(department_avatar);
+            bean.setStart_time(start_time);
+            bean.setFinish_time(finish_time);
+            bean.setExcerpt(excerpt);
+            bean.setImportant(important);
+            bean.setRead(read);
+            bean.setStar(star);
+            bean.setDelete(delete);
+            bean.setVersion(version);
+            bean.setUpdated_at(updated_at);
+            bean.setFull((bean.getFull() > 2) ? bean.getFull() : 2);
+            dao.createOrUpdate(bean);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void Full3NotificationById(int id, String owner,
+                                      String content, String files) {
+        try {
+            DBNotificationBean bean = dao.queryBuilder().where().eq("id", id).and().eq("owner", owner).queryForFirst();
+            bean.setContent(content);
+            bean.setFiles(files);
+            bean.setFull(3);
+            dao.createOrUpdate(bean);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 }
